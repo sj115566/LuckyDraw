@@ -1,139 +1,418 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>線上抽獎系統 by BaconBao</title>
+    <title>線上抽籤系統 by BaconBao</title>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="author" content="BaconBao">
-	<meta name="description" content="點擊幾下就可以規劃獎項與名額，輕鬆快速的完成線上抽獎！">
+	<meta name="description" content="點擊幾下就可以規劃項目與名額，輕鬆快速的完成線上抽籤！">
 	<meta property="og:image" content="ogimage.jpg"/>  
 	<link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="lib/bootstrap-3.3.6.min.css">
 	<style>
+	:root {
+		--primary: #0ea5e9;      /* Sky 500 */
+		--primary-hover: #0284c7;/* Sky 600 */
+		--secondary: #14b8a6;    /* Teal 500 */
+		--secondary-hover: #0d9488;/* Teal 600 */
+		--danger: #ef4444;       /* Red 500 */
+		--danger-hover: #dc2626; /* Red 600 */
+		--warning: #f59e0b;      /* Amber 500 */
+		--bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+		--surface: rgba(255, 255, 255, 0.9);
+		--surface-border: rgba(255, 255, 255, 0.4);
+		--text-main: #1e293b;    /* Slate 800 */
+		--text-muted: #64748b;   /* Slate 500 */
+		--radius-lg: 16px;
+		--radius-md: 8px;
+		--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+		--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+		--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+		--transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
 	body {
-		padding: 15px;
-		padding-top: 50px;
-		font-family: 'Segoe UI',Helvetica,Arial,'Microsoft YaHei',FreeSans,Arimo,'Droid Sans','wenquanyi micro hei','Hiragino Sans GB','Hiragino Sans GB W3',Arial,sans-serif;
+		background: var(--bg-gradient);
+		background-attachment: fixed;
+		min-height: 100vh;
+		padding: 40px 15px;
+		font-family: 'Outfit', 'Segoe UI', Helvetica, Arial, sans-serif;
+		color: var(--text-main);
 	}
+
 	textarea.form-control {
-		border-radius: 0px;
+		border-radius: var(--radius-md);
+		border: 1px solid #cbd5e1;
+		font-size: 15px;
+		padding: 12px;
+		transition: var(--transition);
+		box-shadow: inset var(--shadow-sm);
+		resize: vertical;
 	}
-	#copyright {
-		padding-top: 5px;
-		width: 800px;
-		margin: 0 auto;
-		text-align: center;		
+	
+	textarea.form-control:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+		outline: none;
 	}
+
+	.form-control {
+		border-radius: var(--radius-md);
+		border: 1px solid #cbd5e1;
+		transition: var(--transition);
+	}
+
+	.form-control:focus {
+		border-color: var(--primary);
+		box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+		outline: none;
+	}
+
+	/* Reset Bootstrap buttons globally */
+	.btn {
+		border-radius: var(--radius-md);
+		font-weight: 500;
+		transition: var(--transition);
+		border: none;
+	}
+	.btn:hover {
+		transform: translateY(-1px);
+		box-shadow: var(--shadow-md);
+	}
+	.btn:active {
+		transform: translateY(1px);
+		box-shadow: none;
+	}
+	
+	.btn-danger { background-color: var(--danger); }
+	.btn-danger:hover { background-color: var(--danger-hover); }
+	
+	.btn-success { background-color: var(--secondary); }
+	.btn-success:hover { background-color: var(--secondary-hover); }
+
+	.btn-warning { background-color: var(--warning); color: #fff; border: none; }
+	.btn-warning:hover { background-color: #d97706; color: #fff; } /* Amber 600 */
+
+	.btn-default { 
+		background-color: #f8fafc; 
+		color: var(--text-main);
+		border: 1px solid #e2e8f0;
+	}
+	.btn-default:hover { 
+		background-color: #f1f5f9; 
+		color: var(--text-main);
+	}
+
+
 	#box {
-		width: 800px;
+		max-width: 900px;
 		margin: 0 auto;
-		border: 1px solid #bbb;
+		background: var(--surface);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--surface-border);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-lg);
+		overflow: hidden;
 	}
+
 	#top {
-		background: #4285f4;
+		background: linear-gradient(135deg, var(--primary) 0%, #38bdf8 100%);
 		color: #fff;
-		font-size: 30px;
-		font-weight: bold;
-		padding: 10px;
+		font-size: 28px;
+		font-weight: 700;
+		padding: 20px 24px;
+		text-align: center;
+		letter-spacing: 0.5px;
 	}
+
+	#content {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 24px;
+		padding: 24px;
+	}
+
 	#content .left {
-		display: inline-block;
-		width: 55%;
-		vertical-align: top;
-		padding: 3px;
+		flex: 1 1 300px;
+		display: flex;
+		flex-direction: column;
 	}
+
 	#content .right {
-		display: inline-block;
-		width: 44%;
-		vertical-align: top;
-		padding: 3px;
+		flex: 1 1 400px;
+		display: flex;
+		flex-direction: column;
 	}
+
 	#footer {
-		background: #eee;
-		border-top: 1px solid #ddd;
-		padding: 10px 15px;
-		color: #777;
+		background: rgba(248, 250, 252, 0.8);
+		border-top: 1px solid #e2e8f0;
+		padding: 16px 24px;
+		color: var(--text-muted);
+		font-size: 14px;
+		line-height: 1.6;
 	}
+	
 	#footer a {
-		color: #777;
+		color: var(--primary);
+		text-decoration: none;
+		font-weight: 500;
 	}
+	#footer a:hover { text-decoration: underline; }
+
+	#copyright {
+		padding-top: 24px;
+		max-width: 800px;
+		margin: 0 auto;
+		text-align: center;	
+		color: var(--text-muted);
+		font-size: 13px;
+	}
+	
+	#copyright a {
+		color: var(--primary);
+		text-decoration: none;
+	}
+
+	.header-flex {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 16px;
+	}
+
 	#add_price {
 		font-weight: bold;
-		font-size: 30px;
-		float: right;
-		margin-top: -25px;
+		font-size: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
+
+	.action-area {
+		margin-top: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.draw-remaining-box {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		color: var(--text-main);
+		font-weight: 500;
+		font-size: 15px;
+	}
+
+	.draw-remaining-box input[type="checkbox"] {
+		width: 18px;
+		height: 18px;
+		accent-color: var(--primary);
+		cursor: pointer;
+	}
+
+	.draw-remaining-box label {
+		cursor: pointer;
+		margin: 0;
+	}
+
 	#letsgo {
-		width: 99.99%;
-		margin-top: 3px;
-		border-radius: 0px;
-		font-weight: bold;
-		font-size: 25px;
+		width: 100%;
+		padding: 16px;
+		font-weight: 700;
+		font-size: 20px;
+		letter-spacing: 1px;
+		box-shadow: var(--shadow-md);
+		border-radius: var(--radius-md);
 	}
+	
 	#intro1 {
-		text-align: right;
-		height: 24px;
+		color: var(--text-muted);
+		font-weight: 500;
+		font-size: 15px;
 	}
+
+	#price_list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.priceBox {
+		background: #ffffff;
+		border: 1px solid #e2e8f0;
+		border-radius: var(--radius-md);
+		padding: 12px;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+		box-shadow: var(--shadow-sm);
+		transition: var(--transition);
+	}
+	
+	.priceBox:hover {
+		box-shadow: var(--shadow-md);
+		border-color: #cbd5e1;
+	}
+
+	.priceNumber {
+		background: var(--warning);
+		font-size: 14px;
+		font-weight: 700;
+		padding: 6px 12px;
+		border-radius: 20px;
+		color: #fff;
+		white-space: nowrap;
+	}
+
+	.priceName {
+		flex: 1;
+		min-width: 100px;
+	}
+
+	.controls-group {
+		display: flex;
+		align-items: center;
+		background: #f8fafc;
+		border-radius: var(--radius-md);
+		padding: 4px;
+		border: 1px solid #e2e8f0;
+	}
+
+	.priceBox .count {
+		font-size: 16px;
+		font-weight: 600;
+		width: 48px;
+		text-align: center;
+		color: var(--text-main);
+		border: none;
+		background: transparent;
+		padding: 0;
+	}
+	.priceBox .count:focus {
+		outline: none;
+		background: #fff;
+		border-radius: 4px;
+	}
+	/* Hide spinner for number input */
+	.priceBox .count::-webkit-inner-spin-button, 
+	.priceBox .count::-webkit-outer-spin-button { 
+		-webkit-appearance: none; 
+		margin: 0; 
+	}
+	.priceBox .count[type=number] {
+		-moz-appearance: textfield;
+		appearance: textfield;
+	}
+
+	.btn-circle {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		padding: 0;
+	}
+
+	/* Results Area */
 	#results {
-		padding: 15px;
+		padding: 32px 24px;
+		background: #ffffff;
 	}
+
+	.results-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 24px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid #e2e8f0;
+	}
+
+	#candidates_count {
+		font-size: 16px;
+		font-weight: 500;
+		color: var(--text-muted);
+	}
+
+	.results-header-actions {
+		display: flex;
+		gap: 8px;
+	}
+
+	#restart, #go_back {
+		font-weight: 600;
+		padding: 8px 16px;
+	}
+
 	#congrats {
 		text-align: center;
-		color: #FF5722;
-		font-size: 30px;
-		font-weight: bold;
+		font-size: 32px;
+		font-weight: 800;
+		margin-bottom: 24px;
 	}
-	#restart {
-		float: right;
-		font-weight: bold;
+
+	.text-gradient {
+		color: transparent;
+		background: linear-gradient(90deg, var(--primary), var(--secondary));
+		-webkit-background-clip: text;
+		background-clip: text;
 	}
-	#candidates_count {
-		float: left;
-	}
-	.btn-circle {
-		width: 49px;
-		height: 49px;
-		text-align: center;
-		padding: 0px 0;
-		font-size: 20px;
-		line-height: 0.00;
-		border-radius: 30px;
-		vertical-align: top;
-		border-top: 0px;
-	}
-	.priceNumber {
-		display: inline-block;
-		background: #FF5722;
-		font-size: 15px;
-		font-weight: bold;
-		padding: 5px 5px 10px 5px;
-		color: #fff;
-		margin-right: 50px;
-	}
-	.priceBox {
-		background: #ffc107;
-		margin-top: 3px;
-		border: 1px solid #eee;
-	}
-	.priceBox .count {
-		font-size: 20px;
-		font-weight: bold;
-	}
+
 	.pn {
-		display: block;
-		background: #ff8013;
+		display: inline-block;
+		background: var(--warning);
 		font-size: 18px;
-		font-weight: bold;
-		padding: 5px 5px 10px 5px;
+		font-weight: 700;
+		padding: 8px 16px;
+		border-radius: var(--radius-md);
 		color: #fff;
-		margin: 8px 0px 5px;
+		margin: 16px 0 8px 0;
+		width: 100%;
+		box-shadow: var(--shadow-sm);
 	}
+
 	.pnw {
-		display: block;
+		display: inline-block;
 		font-size: 18px;
-		font-weight: 500;
-		padding: 1px 0px 0px 15px;
-		color: #000;
+		font-weight: 600;
+		padding: 12px 20px;
+		color: var(--primary);
+		background: #eef2ff;
+		border-radius: var(--radius-md);
+		margin: 0 8px 8px 0;
+		border: 1px solid #c7d2fe;
+	}
+	
+	.pnw-rank {
+		display: inline-block;
+		background: var(--primary);
+		color: white;
+		border-radius: 50%;
+		width: 24px;
+		height: 24px;
+		line-height: 24px;
+		text-align: center;
+		font-size: 14px;
+		margin-right: 8px;
+	}
+	
+	.pnw:contains('--Empty--') {
+		color: var(--text-muted);
+		background: #f1f5f9;
+		border-color: #e2e8f0;
+	}
+
+	@media (max-width: 640px) {
+		#content { flex-direction: column; }
+		.priceBox { flex-direction: column; align-items: stretch; }
+		.header-flex { flex-direction: column; align-items: flex-start; gap: 12px; }
+		#add_price { align-self: flex-end; }
 	}
 	</style>
 	<script src="lib/jquery-1.11.3.min.js"></script>
@@ -152,12 +431,16 @@
 			}
 		}
 
-		var temp_price_list_count = 1;
 		setClickBind();
 
 		$("#add_price").click(function(){
-			temp_price_list_count++;
-			$('#price_list').append('<div class="priceBox"><span class="priceNumber">'+'獎項 #'+temp_price_list_count+'</span><button class="btn btn-default btn-sm decrease">-</button>抽出<span class="count">1</span>名<button class="btn btn-default btn-sm increase">+</button></div>');
+			var nextIndex = $('#price_list .priceBox').length + 1;
+			$('#price_list').append('<div class="priceBox">' +
+				'<span class="priceNumber">項目 #' + nextIndex + '</span>' +
+				'<input type="text" class="priceName form-control" placeholder="自訂名稱(選填)">' +
+				'<div class="controls-group"><button class="btn btn-default btn-sm decrease">-</button><input type="number" class="count" value="1" min="0"><button class="btn btn-default btn-sm increase">+</button></div>' +
+				'<button class="btn btn-danger btn-sm remove-price">刪除</button>' +
+				'</div>');
 
 			setClickBind();
 
@@ -167,6 +450,38 @@
 
 		});
 		$('#restart').click(function(){ document.location.reload(); });
+		$('#go_back').click(function(){
+			$('#results').fadeOut(function(){
+				$('#content').fadeIn();
+				$('#footer').fadeIn();
+			});
+		});
+		$('#export_excel').click(function(){
+			var csvContent = "\uFEFF"; // BOM for UTF-8 Excel compatibility
+			csvContent += "抽籤項目,順序,中籤者\n";
+			for(var k=0; k<winner.length; k++){
+				var pName = priceNames[k] ? priceNames[k].replace(/"/g, '""') : "";
+				if(winner[k].length === 0) {
+					csvContent += '"' + pName + '",,"--Empty--"\n';
+				} else {
+					for(var m=0; m<winner[k].length; m++){
+						var wName = winner[k][m] ? winner[k][m].replace(/"/g, '""') : "";
+						csvContent += '"' + pName + '","' + (m + 1) + '","' + wName + '"\n';
+					}
+				}
+			}
+			var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+			var link = document.createElement("a");
+			if (link.download !== undefined) {
+				var url = URL.createObjectURL(blob);
+				link.setAttribute("href", url);
+				link.setAttribute("download", "抽籤結果.csv");
+				link.style.visibility = 'hidden';
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			}
+		});
 
 		/*--===================
 			Works after start. 
@@ -176,6 +491,7 @@
 		var price_count = 0;
 		var volume = [];
 		var winner = [];
+		var priceNames = [];
 
 		$('#letsgo').click(function(){
 
@@ -183,11 +499,15 @@
 				sessionStorage.setItem('candidates', $('textarea[name=candidates]').val());
 			}
 			re_init();
+			priceNames = [];
 
 			/*--- GET All Price and their Volume---*/
 			$('.priceBox').each(function(){
 				price_count++;
-				var tmpCount = parseInt($('>.count',this).text());
+				var tmpCount = parseInt($(this).find('.count').val()) || 0;
+				var pName = $(this).find('.priceName').val().trim();
+				if(!pName) pName = $(this).find('.priceNumber').text();
+				priceNames.push(pName);
 				volume.push(tmpCount);
 				temp_total_count = temp_total_count + tmpCount;
 			});
@@ -204,14 +524,12 @@
 				candidates.push(p);
 			}
 			showArray('[init] ', candidates);
-			$('#candidates_count').text('本次共'+candidates.length+'位抽獎者');
-
+			var warningMessage = '';
 			/*--- Candidates' Data check ---*/
 			if(candidates.length<temp_total_count){
-				alert('名單少於獎項名額。');
-				console.log('--------------ENDING--------------');
-				return false;
+				warningMessage = ' <span style="color:red; font-weight:bold;">(注意：參與人數少於項目總名額！)</span>';
 			}
+			$('#candidates_count').html('本次共'+candidates.length+'位抽籤者' + warningMessage);
 
 			/*--- Main work ---*/
 			for(var j=0; j<price_count; j++){
@@ -233,20 +551,29 @@
 				showArray('[after_remove_same] ', candidates);
 			}
 
+			/*--- Draw remaining if checked ---*/
+			var drawRemaining = $('#draw_remaining').is(':checked');
+			if(drawRemaining && candidates.length > 0) {
+				shuffle(candidates);
+				priceNames.push("其他未中籤者");
+				winner.push([...candidates]); // Copy array
+				candidates = [];
+			}
+
 			/*--- Print the Winners ---*/
+			$('#winners_list').empty();
 			for(var k=0; k<winner.length; k++){
-				$('#results').append('<span class="pn">獎項 #'+(k+1)+'</span>');
+				$('#winners_list').append('<span class="pn">'+priceNames[k]+'</span>');
 				for(var m=0; m<winner[k].length; m++){
-					$('#results').append('<span class="pnw">'+winner[k][m]+'</span>');
+					$('#winners_list').append('<span class="pnw"><span class="pnw-rank">' + (m + 1) + '</span>' + winner[k][m] + '</span>');
 				}
-				if(winner[k].length===0) $('#results').append('<span class="pnw">--Empty--</span>');
+				if(winner[k].length===0) $('#winners_list').append('<span class="pnw">--Empty--</span>');
 			}
 			console.log('--------------ENDING--------------');
 			$('#content').fadeOut();
 			$('#footer').fadeOut(function(){
 				$('#results').fadeIn()
 			});
-			ga('send', 'pageview', 'showResult');
 		});
 
 		/*--===========
@@ -278,16 +605,37 @@
 			price_count = 0;
 			volume = [];
 			winner = [];			
+			priceNames = [];
+		}
+
+		function updatePrizeNumbers() {
+			$('#price_list .priceBox').each(function(index) {
+				$(this).find('.priceNumber').text('項目 #' + (index + 1));
+			});
 		}
 
 		function setClickBind(){
 			$('.decrease').off('click').on('click', function(){
-				var val = parseInt( $(this).parent('.priceBox').children('.count').text() );
-				if(val>=1) $(this).parent('.priceBox').children('.count').text(val-1);
+				var val = parseInt( $(this).siblings('.count').val() ) || 0;
+				if(val>=1) $(this).siblings('.count').val(val-1);
 			});
 			$('.increase').off('click').on('click', function(){
-				var val = parseInt( $(this).parent('.priceBox').children('.count').text() );
-				$(this).parent('.priceBox').children('.count').text(val+1);
+				var val = parseInt( $(this).siblings('.count').val() ) || 0;
+				$(this).siblings('.count').val(val+1);
+			});
+			$('.count').off('blur').on('blur', function(){
+				var val = parseInt( $(this).val() );
+				if(isNaN(val) || val < 0) {
+					$(this).val(0);
+				}
+			});
+			$('.remove-price').off('click').on('click', function(){
+				if ($('#price_list .priceBox').length > 1) {
+					$(this).closest('.priceBox').remove();
+					updatePrizeNumbers();
+				} else {
+					alert('至少需要保留一個項目！');
+				}
 			});
 		}
 
@@ -297,7 +645,7 @@
 <body>
 
 	<div id="box">
-		<div id="top">線上抽獎系統</div>
+		<div id="top">線上抽籤系統</div>
 		<div id="content">
 			<div class="left">
 				<textarea name="candidates" class="form-control" rows="12">Steve Jobs
@@ -312,39 +660,54 @@ Morris Chang
 Stan Shih</textarea>
 			</div>
 			<div class="right">
-				<button id="add_price" class="btn btn-circle btn-danger">+</button>
-				<div id="intro1">點此新增獎項與名額 →</div>
-				<div id="price_list">
-					<div class="priceBox"><span class="priceNumber">獎項 #1</span><button class="btn btn-default btn-sm decrease">-</button>抽出<span class="count">1</span>名<button class="btn btn-default btn-sm increase">+</button></div>
+				<div class="header-flex">
+					<div id="intro1">設定項目與名額：</div>
+					<button id="add_price" class="btn btn-circle btn-danger">+</button>
 				</div>
-				<button id="letsgo" class="btn btn-success">開始抽獎！</button>
+				<div id="price_list">
+					<div class="priceBox">
+						<span class="priceNumber">項目 #1</span>
+						<input type="text" class="priceName form-control" placeholder="自訂名稱(選填)">
+						<div class="controls-group">
+							<button class="btn btn-default btn-sm decrease">-</button>
+							<input type="number" class="count" value="1" min="0">
+							<button class="btn btn-default btn-sm increase">+</button>
+						</div>
+						<button class="btn btn-danger btn-sm remove-price">刪除</button>
+					</div>
+				</div>
+				<div class="action-area">
+					<div class="draw-remaining-box">
+						<input type="checkbox" id="draw_remaining">
+						<label for="draw_remaining">將剩下的人也依序抽出</label>
+					</div>
+					<button id="letsgo" class="btn btn-success">開始抽籤！</button>
+				</div>
 			</div>
 		</div>
 		<div id="footer">
 			Note.<br />
 			<span>1. <b style="color: #4285f4;">請將名單填入上方輸入框，並以換行做分隔。</b><br /></span>
-			<span>2. 抽獎順序為： 獎項#1 → 獎項#2 → ...... → 獎項#N。<br /></span>
-			<span>3. 每一輪獎項的名單皆會排除上一輪的中獎者。<br /></span>
+			<span>2. 抽籤順序為： 項目#1 → 項目#2 → ...... → 項目#N。<br /></span>
+			<span>3. 每一輪項目的名單皆會排除上一輪的中籤者。<br /></span>
 			<span>4. 亂數抽取算法採用 <a href="http://stackoverflow.com/a/2450976" target="_blank">The Fisher-Yates (aka Knuth) shuffle</a><br /></span>
 		</div>
 		<div id="results">
-			<span id="candidates_count">123</span>
-			<button id="restart" class="btn btn-success">重新開始</button>
-			<div id="congrats">恭喜以下得獎者！</div>
+			<div class="results-header">
+				<span id="candidates_count">123</span>
+				<div class="results-header-actions">
+					<button id="export_excel" class="btn btn-warning">匯出 Excel</button>
+					<button id="go_back" class="btn btn-success">返回</button>
+					<button id="restart" class="btn btn-default">重新開始</button>
+				</div>
+			</div>
+			<div id="congrats">🎉 <span class="text-gradient">恭喜以下中籤者！</span></div>
+			<div id="winners_list"></div>
 		</div>
 	</div>
 	<div id="copyright">
-		<span>The tool made by <a href="https://baconbao.github.io/" target="_blank">BaconBao Lin</a>. Source code on <a href="https://github.com/baconbao/LuckyBacon" target="_blank">GitHub</a></span>
+		<span>Original tool by <a href="https://baconbao.github.io/" target="_blank">BaconBao Lin</a> (Source code on <a href="https://github.com/baconbao/LuckyBacon" target="_blank">GitHub</a>). This is a modified version forked and customized by me.</span>
 	</div>
-	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-	  ga('create', 'UA-65191016-4', 'auto');
-	  ga('send', 'pageview', 'index');
-
-	</script>
 </body>
 </html>
